@@ -18,8 +18,8 @@ const auth = require("./api/middleware/auth");
 const user = require("./api/user");
 
 // Gunakan API
-app.use("/user", user);
-app.use("/auth", auth);
+app.use("/api/user", user);
+app.use("/api/auth", auth);
 
 // Server
 app.listen(port, () => {

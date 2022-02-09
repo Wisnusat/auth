@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 06, 2022 at 12:48 PM
+-- Generation Time: Feb 09, 2022 at 04:51 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.3.25
 
@@ -46,8 +46,8 @@ INSERT INTO `sequelizemeta` (`name`) VALUES
 
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
-  `nama` varchar(255) DEFAULT NULL,
-  `username` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `email` varchar(255) NOT NULL,
   `password` varchar(255) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL
@@ -57,9 +57,10 @@ CREATE TABLE `user` (
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `nama`, `username`, `password`, `createdAt`, `updatedAt`) VALUES
-(1, 'wisnu', 'wisnu', 'wisnu0601', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(2, 'test', 'test', '97c6f2a9adffd0e310b6473ff1c2255c16febac4f3319908baca25bc271f0207', '2022-02-03 08:46:35', '2022-02-03 08:46:35');
+INSERT INTO `user` (`id`, `name`, `email`, `password`, `createdAt`, `updatedAt`) VALUES
+(8, 'malang', 'malang@gmail.com', 'd5de0c306c82b2fcbe9b0c2b9a0cbb33a23d1b6786137597aca5924ed68bdaaa', '2022-02-08 21:54:14', '2022-02-08 21:54:14'),
+(19, 'halo', 'wisnu@gmail.com', 'U2FsdGVkX1+7Fpjk4TxDBV79PGKQX2ojCBJclQKkBaw=', '2022-02-09 01:27:22', '2022-02-09 01:27:22'),
+(20, 'gagas', 'onespotify105@gmail.com', 'U2FsdGVkX1+LO8LlSPDAqe9dQfrCvtWvYGBoCvxbTx0=', '2022-02-09 03:13:34', '2022-02-09 03:13:34');
 
 --
 -- Indexes for dumped tables
@@ -86,7 +87,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
