@@ -2,6 +2,9 @@ const express = require("express");
 const app = express();
 const jwt = require("jsonwebtoken");
 var CryptoJS = require("crypto-js");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 
 // Ambil config
 const { secretKey } = require("../../config/config");

@@ -1,6 +1,9 @@
 const express = require("express");
 const app = express();
 var CryptoJS = require("crypto-js");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 
 // Ambil konfig
 const { secretKey } = require("../config/config");
@@ -22,7 +25,18 @@ app.use(express.json());
 const verify = require("./middleware/auth_verify");
 app.use(verify);
 
-// Bagian CRUD [Create, Read, Update, Delete] 
+// config image storage
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./images");
+  },
+  filename: (req, file, cb) => {
+    cb(null, "img-" + Date.now() + path.extname(file.originalname));
+  },
+});
+let upload = multer({ storage: storage });
+
+// Bagian CRUD [Create, Read, Update, Delete]
 // Get data
 app.get("/", async (req, res) => {
   user
@@ -42,7 +56,7 @@ app.get("/", async (req, res) => {
 });
 
 // Update data
-app.put("/update-profile", async (req, res) => {
+app.put("/update-profile", upload.single("profile_image"), async (req, res) => {
   let data = {
     name: req.body.name,
     email: req.body.username,
@@ -52,6 +66,19 @@ app.put("/update-profile", async (req, res) => {
   let id = {
     id: req.body.id,
   };
+
+  if (req.file) {
+    // get data by id
+    const row = await user.findOne({ where: id });
+    let oldFileName = row.profile_image;
+
+    // delete old file
+    let dir = path.join(__dirname, "../images", oldFileName);
+    fs.unlink(dir, (err) => console.log(err));
+
+    // set new filename
+    data.profile_image = req.file.filename;
+  }
 
   user
     .update(data, { where: id })

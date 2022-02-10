@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 09, 2022 at 04:51 AM
+-- Generation Time: Feb 10, 2022 at 04:31 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.3.25
 
@@ -49,6 +49,7 @@ CREATE TABLE `user` (
   `name` varchar(255) DEFAULT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) DEFAULT NULL,
+  `profile_image` varchar(255) NOT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -57,10 +58,11 @@ CREATE TABLE `user` (
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `name`, `email`, `password`, `createdAt`, `updatedAt`) VALUES
-(8, 'malang', 'malang@gmail.com', 'd5de0c306c82b2fcbe9b0c2b9a0cbb33a23d1b6786137597aca5924ed68bdaaa', '2022-02-08 21:54:14', '2022-02-08 21:54:14'),
-(19, 'halo', 'wisnu@gmail.com', 'U2FsdGVkX1+7Fpjk4TxDBV79PGKQX2ojCBJclQKkBaw=', '2022-02-09 01:27:22', '2022-02-09 01:27:22'),
-(20, 'gagas', 'onespotify105@gmail.com', 'U2FsdGVkX1+LO8LlSPDAqe9dQfrCvtWvYGBoCvxbTx0=', '2022-02-09 03:13:34', '2022-02-09 03:13:34');
+INSERT INTO `user` (`id`, `name`, `email`, `password`, `profile_image`, `createdAt`, `updatedAt`) VALUES
+(8, 'update', 'malang@gmail.com', 'U2FsdGVkX18nK+o+7KvwTTouHXZ7LX/7epwMmWZw6vk=', 'img-1644460017134.JPG', '2022-02-08 21:54:14', '2022-02-10 02:26:57'),
+(19, 'halo', 'wisnu@gmail.com', 'U2FsdGVkX1+fc3COO7tScNUmhJwDnTTWve9fqCO2AJ8=', 'img-1644460084231.png', '2022-02-09 01:27:22', '2022-02-10 02:28:04'),
+(20, 'gagas', 'onespotify105@gmail.com', 'U2FsdGVkX1+LO8LlSPDAqe9dQfrCvtWvYGBoCvxbTx0=', '', '2022-02-09 03:13:34', '2022-02-09 03:13:34'),
+(21, 'coba1', 'coba1@gmail.com', 'U2FsdGVkX18fPLRcRcnMSuco+85epWn1XPJ60P6/X7o=', 'img-1644463631473.jpeg', '2022-02-10 03:27:11', '2022-02-10 03:27:11');
 
 --
 -- Indexes for dumped tables
@@ -87,7 +89,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
