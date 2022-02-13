@@ -11,15 +11,15 @@ const { secretKey } = require("../../config/config");
 
 // Password encryption function
 const encrypt = (nakedText) => {
-  return CryptoJS.AES.encrypt(nakedText, secretKey).toString();
-};
+  return hash = CryptoJS.HmacSHA256(nakedText, secretKey).toString()
+}
 
 // Password decrypt function
-const decrypt = (encryptedText) => {
-  return CryptoJS.AES.decrypt(encryptedText, secretKey).toString(
-    CryptoJS.enc.Utf8
-  );
-};
+// const decrypt = (encryptedText) => {
+//   return CryptoJS.AES.decrypt(encryptedText, secretKey).toString(
+//     CryptoJS.enc.Utf8
+//   );
+// };
 
 // Send mail function
 const nodemailer = require("nodemailer");
@@ -102,43 +102,43 @@ app.post("/register", async (req, res) => {
 });
 
 // forgot password
-app.get("/forgot", async (req, res) => {
-  // Deklarasi semua variable dalam table database user
-  let data = {
-    email: req.body.email,
-  };
+// app.get("/forgot", async (req, res) => {
+//   // Deklarasi semua variable dalam table database user
+//   let data = {
+//     email: req.body.email,
+//   };
 
-  // put result
-  let result = await user.findOne({ where: data });
+//   // put result
+//   let result = await user.findOne({ where: data });
 
-  if (result === null) {
-    res.json({
-      found: false,
-      message: "User not found",
-    });
-  } else {
-    res.json({
-      found: true,
-      password: decrypt(result.password),
-    });
+//   if (result === null) {
+//     res.json({
+//       found: false,
+//       message: "User not found",
+//     });
+//   } else {
+//     res.json({
+//       found: true,
+//       password: decrypt(result.password),
+//     });
 
-    // Declarate email details
-    let mailDetails = {
-      from: "batarawisnu96@gmail.com",
-      to: data.email,
-      subject: "Forgot Password",
-      text: decrypt(result.password),
-    };
+//     // Declarate email details
+//     let mailDetails = {
+//       from: "batarawisnu96@gmail.com",
+//       to: data.email,
+//       subject: "Forgot Password",
+//       text: decrypt(result.password),
+//     };
 
-    // Send email
-    mailTransporter.sendMail(mailDetails, function (err, data) {
-      if (err) {
-        console.log("Error Occurs");
-      } else {
-        console.log("Email sent successfully");
-      }
-    });
-  }
-});
+//     // Send email
+//     mailTransporter.sendMail(mailDetails, function (err, data) {
+//       if (err) {
+//         console.log("Error Occurs");
+//       } else {
+//         console.log("Email sent successfully");
+//       }
+//     });
+//   }
+// });
 
 module.exports = app;
