@@ -9,10 +9,13 @@ const fs = require("fs");
 // Ambil config
 const { secretKey } = require("../../config/config");
 
+//Token verification
+const verify = require("./token_verify");
+
 // Password encryption function
 const encrypt = (nakedText) => {
-  return hash = CryptoJS.HmacSHA256(nakedText, secretKey).toString()
-}
+  return (hash = CryptoJS.HmacSHA256(nakedText, secretKey).toString());
+};
 
 // Password decrypt function
 // const decrypt = (encryptedText) => {
@@ -59,7 +62,7 @@ app.post("/login", async (req, res) => {
     // jwt
     let jwtHeader = {
       algorithm: "HS256",
-      // expiresIn: exp.expToken // 1s 1h 1d 1w 1y
+      expiresIn: "1d",
     };
 
     let payload = {
@@ -77,68 +80,115 @@ app.post("/login", async (req, res) => {
 
 // Add data
 app.post("/register", async (req, res) => {
-  // Deklarasi semua variable dalam table database user
   let data = {
     name: req.body.name,
     email: req.body.email,
     password: encrypt(req.body.password),
   };
 
-  user
-    .create(data)
-    .then((result) => {
-      res.json({
-        message: "Data inserted",
-        isSuccess: true,
-        data: result,
+  let email = {
+    email: req.body.email,
+  };
+
+  const oldUser = await user.findOne({ where: email });
+
+  if (oldUser) {
+    return res.status(409).send("User Already Exist. Please Login");
+  } else {
+    user
+      .create(data)
+      .then((result) => {
+        res.json({
+          message: "Data inserted",
+          isSuccess: true,
+          data: result,
+        });
+      })
+      .catch((error) => {
+        res.json({
+          message: error.message,
+          isSuccess: false,
+        });
       });
-    })
-    .catch((error) => {
-      res.json({
-        message: error.message,
-        isSuccess: false,
-      });
-    });
+  }
 });
 
 // forgot password
-// app.get("/forgot", async (req, res) => {
-//   // Deklarasi semua variable dalam table database user
+app.post("/forgot", async (req, res) => {
+  let data = {
+    email: req.body.email,
+  };
+
+  // put result
+  let result = await user.findOne({ where: data });
+
+  if (result === null) {
+    res.json({
+      found: false,
+      message: "User not found",
+    });
+  } else {
+    // jwt
+    let jwtHeader = {
+      algorithm: "HS256",
+      expiresIn: "1d",
+    };
+
+    let payload = {
+      data: result,
+    };
+
+    let token = jwt.sign(payload, secretKey, jwtHeader);
+    res.json({
+      // data: result,
+      message: "User found",
+      token: token,
+    });
+
+    // Declarate email details
+    let mailDetails = {
+      from: "batarawisnu96@gmail.com",
+      to: data.email,
+      subject: "Forgot Password",
+      text: "https://markashosting.sosmed/" + token,
+    };
+
+    // Send email
+    mailTransporter.sendMail(mailDetails, function (err, data) {
+      if (err) {
+        console.log("Error Occurs");
+      } else {
+        console.log("Email sent successfully");
+      }
+    });
+  }
+});
+
+//Reset password
+// app.put("/reset-password/:token", verify, async (req, res) => {
 //   let data = {
+//     password: encrypt(req.body.password),
+//   };
+
+//   let email = {
 //     email: req.body.email,
 //   };
 
-//   // put result
-//   let result = await user.findOne({ where: data });
-
-//   if (result === null) {
-//     res.json({
-//       found: false,
-//       message: "User not found",
+//   user
+//     .update(data, { where: email })
+//     .then((result) => {
+//       res.json({
+//         message: "Data updated",
+//         isSuccess: true,
+//       });
+//     })
+//     .catch((error) => {
+//       res.json({
+//         message: error.message,
+//         isSuccess: false,
+//       });
+//       console.log(token);
 //     });
-//   } else {
-//     res.json({
-//       found: true,
-//       password: decrypt(result.password),
-//     });
-
-//     // Declarate email details
-//     let mailDetails = {
-//       from: "batarawisnu96@gmail.com",
-//       to: data.email,
-//       subject: "Forgot Password",
-//       text: decrypt(result.password),
-//     };
-
-//     // Send email
-//     mailTransporter.sendMail(mailDetails, function (err, data) {
-//       if (err) {
-//         console.log("Error Occurs");
-//       } else {
-//         console.log("Email sent successfully");
-//       }
-//     });
-//   }
 // });
 
 module.exports = app;
