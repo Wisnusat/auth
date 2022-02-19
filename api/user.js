@@ -22,8 +22,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Middleware, Autentikasi user
-// const verify = require("./middleware/auth_verify");
-// app.use(verify);
+const verify = require("./middleware/auth_verify");
+app.use(verify);
 
 // config image storage
 const storage = multer.diskStorage({
@@ -77,22 +77,6 @@ app.put("/update-profile", upload.single("profile_image"), async (req, res) => {
   let id = {
     id: req.body.id,
   };
-
-  // if (req.file) {
-  //   // get data by id
-  //   const row = await user.findOne({ where: id });
-  //   let oldFileName = row.profile_image;
-
-  //   if (oldFileName != null) {
-  //     // delete old file
-  //     let dir = path.join(__dirname, "../images", oldFileName);
-  //     fs.unlink(dir, (err) => console.log(err));
-
-  //     // set new filename
-  //     data.profile_image = req.file.filename;
-  //     console.log("function eliminated");
-  //   }
-  // }
 
   user
     .update(data, { where: id })
