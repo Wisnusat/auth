@@ -11,7 +11,7 @@ const { secretKey } = require("../config/config");
 // Password Encryption dengan menggunakan library crypto-js
 // Encrypt
 const encrypt = (nakedText) => {
-  return CryptoJS.AES.encrypt(nakedText, secretKey).toString();
+  return (hash = CryptoJS.HmacSHA256(nakedText, secretKey).toString());
 };
 
 // Panggil Model dari sequelize db:migrate
@@ -22,8 +22,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Middleware, Autentikasi user
-const verify = require("./middleware/auth_verify");
-app.use(verify);
+// const verify = require("./middleware/auth_verify");
+// app.use(verify);
 
 // config image storage
 const storage = multer.diskStorage({
@@ -59,26 +59,40 @@ app.get("/", async (req, res) => {
 app.put("/update-profile", upload.single("profile_image"), async (req, res) => {
   let data = {
     name: req.body.name,
-    email: req.body.username,
-    password: encrypt(req.body.password),
+    email: req.body.email,
   };
+
+  if (req.body.password) {
+    {
+      data.password = encrypt(req.body.password);
+    }
+  }
+
+  if (req.file) {
+    {
+      data.profile_image = req.file.filename;
+    }
+  }
 
   let id = {
     id: req.body.id,
   };
 
-  if (req.file) {
-    // get data by id
-    const row = await user.findOne({ where: id });
-    let oldFileName = row.profile_image;
+  // if (req.file) {
+  //   // get data by id
+  //   const row = await user.findOne({ where: id });
+  //   let oldFileName = row.profile_image;
 
-    // delete old file
-    let dir = path.join(__dirname, "../images", oldFileName);
-    fs.unlink(dir, (err) => console.log(err));
+  //   if (oldFileName != null) {
+  //     // delete old file
+  //     let dir = path.join(__dirname, "../images", oldFileName);
+  //     fs.unlink(dir, (err) => console.log(err));
 
-    // set new filename
-    data.profile_image = req.file.filename;
-  }
+  //     // set new filename
+  //     data.profile_image = req.file.filename;
+  //     console.log("function eliminated");
+  //   }
+  // }
 
   user
     .update(data, { where: id })
